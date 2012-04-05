@@ -299,12 +299,8 @@ class QuerySetUnion(object):
         if clone._limit_high_mark is not None:
             l = 0 if clone._limit_low_mark is None else clone._limit_low_mark
             sql += ' LIMIT %d' % (clone._limit_high_mark - l)
-            #print sql
         if clone._limit_low_mark is not None:
             sql += ' OFFSET %d' % clone._limit_low_mark            
-        
-        
-        #print sql
         
         cursor = connection.cursor()
         cursor.execute(sql, params)
@@ -328,8 +324,6 @@ class QuerySetUnion(object):
         cursor = connection.cursor()
         cursor.execute(sql, params)
         c = cursor.fetchone()[0]
-        print sql
-        print "===",c
         return int(c)    
     
     def get(self, *args, **kwargs):
@@ -474,7 +468,7 @@ class QuerySetUnion(object):
     # PRIVATE METHODS #
     ###################
     def _clone(self):
-        return Manager(query_set=self.clone_query_set(),ordering = deepcopy(self.ordering),low_mark = self._limit_low_mark,high_mark = self._limit_high_mark)
+        return QuerySetUnion(query_set=self.clone_query_set(),ordering = deepcopy(self.ordering),low_mark = self._limit_low_mark,high_mark = self._limit_high_mark)
 
     def _fill_cache(self, num=None):
         if self._iter:

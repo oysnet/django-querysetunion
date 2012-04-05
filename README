@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from editorials.models import Article
 from community.models import BlogPost 
+from querysetunion.query import QuerySetUnion
 
 results = QuerySetUnion().models(Article,BlogPost).filter(status="draft").order_by('status','-publication_date')
 paginator = Paginator(results, 10)
